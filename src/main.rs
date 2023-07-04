@@ -1,21 +1,17 @@
 #![no_std]
 #![no_main]
 
-mod vga_buffer;
-
-use core::panic::PanicInfo;
-
-
-#[panic_handler]
-fn panic(info: &PanicInfo) ->! {
-    println!("{}", info);
-    loop {
-    }
-}
+use mongo_os::println;
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
-    println!("Welcome to MonogoOS");
+    println!("Welcome to MongoOS");
+    mongo_os::init();
+
+    fn stack_overflow(){
+        stack_overflow();
+    }
+    stack_overflow();
     loop {}
 }
 
