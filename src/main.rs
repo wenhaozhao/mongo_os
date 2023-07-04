@@ -7,11 +7,6 @@ use mongo_os::println;
 pub extern "C" fn _start() -> ! {
     println!("Welcome to MongoOS");
     mongo_os::init();
-
-    fn stack_overflow(){
-        stack_overflow();
-    }
-    stack_overflow();
-    loop {}
+    mongo_os::halt_loop()
 }
 
