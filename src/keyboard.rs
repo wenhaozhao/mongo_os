@@ -1,7 +1,7 @@
 use x86_64::structures::idt::InterruptStackFrame;
 
 use crate::idt::{InterruptIndex, PICS};
-use crate::{print, println};
+use crate::print;
 
 const PS2_IO_PORT_ADDR: u16 = 0x60;
 
@@ -9,7 +9,7 @@ pub extern "x86-interrupt" fn keyboard_interrupt_handler(stack_frame: InterruptS
     //todo
     use lazy_static::lazy_static;
     use spin::Mutex;
-    use x86_64::instructions::port::{Port, PortGeneric, ReadWriteAccess};
+    use x86_64::instructions::port::Port;
     use pc_keyboard::{HandleControl, Keyboard, DecodedKey};
 lazy_static! {
     static ref KEYBOARD: Mutex<Keyboard<pc_keyboard::layouts::Us104Key, pc_keyboard::ScancodeSet1>>={

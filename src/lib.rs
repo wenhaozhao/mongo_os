@@ -9,11 +9,12 @@ pub mod gdt;
 pub mod idt;
 pub mod timer;
 pub mod keyboard;
+pub mod mem;
 
 #[panic_handler]
 pub fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
-    halt_loop()
+    hlt_loop()
 }
 
 pub fn init() {
@@ -21,9 +22,8 @@ pub fn init() {
     idt::init_idt();
 }
 
-pub fn halt_loop()->!{
+pub fn hlt_loop() ->!{
     loop {
         x86_64::instructions::hlt();
     }
 }
-
