@@ -121,12 +121,13 @@ impl fmt::Write for Writer {
     }
 }
 
+pub const VGA_PHYS_ADDR:u64 = 0xb8000;
 lazy_static! {
     pub static ref WRITER: Mutex<Writer> = Mutex::new(
     Writer {
         column_position: 0,
         color_code: ColorCode::new(Color::Yellow, Color::Black),
-        buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
+        buffer: unsafe { &mut *(VGA_PHYS_ADDR as *mut Buffer) },
     }
 );
 }
