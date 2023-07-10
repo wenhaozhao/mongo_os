@@ -1,6 +1,7 @@
 #![no_std]
 #![no_main]
 #![feature(abi_x86_interrupt)]
+#![feature(const_mut_refs)]
 
 use core::panic::PanicInfo;
 
@@ -10,6 +11,7 @@ pub mod idt;
 pub mod timer;
 pub mod keyboard;
 pub mod mem;
+pub mod allocator;
 
 #[panic_handler]
 pub fn panic(info: &PanicInfo) -> ! {
