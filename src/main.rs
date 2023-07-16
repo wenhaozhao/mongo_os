@@ -4,6 +4,8 @@
 extern crate alloc;
 
 use alloc::boxed::Box;
+use alloc::vec;
+use alloc::vec::Vec;
 
 use bootloader::{BootInfo, entry_point};
 use x86_64::{PhysAddr, VirtAddr};
@@ -25,36 +27,33 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
         Err(err) => panic!("Init heap failed, {:?}", err)
     };
     // example_create_page_map_to_0xb8000(&mut offset_page_table, &mut frame_allocator);
-    let x = Box::new("x");
-    println!("{} => {:p}", &x, x);
 
     unsafe {
-        let x_ref = x.as_ref();
-        let virt = VirtAddr::from_ptr(x_ref);
-        let phys = offset_page_table.translate_addr(virt);
-        println!("{:o}:{:x} => {:?}",
-                 virt.as_u64(),u64::from(virt.page_offset()),
-                 phys
-        );
+        alloc_test();
+        alloc_test();
+        alloc_test();
+        alloc_test();
+        alloc_test();
+        alloc_test();
+        alloc_test();
+        alloc_test();
     }
-    let y = Box::new("y");
-    println!("{} => {:p}", &y, y);
-    unsafe {
-        let y_ref = y.as_ref();
-        let virt = VirtAddr::from_ptr(y_ref);
-        let phys = offset_page_table.translate_addr(virt);
-        println!("{:o}:{:x} => {:?}",
-                 virt.as_u64(),u64::from(virt.page_offset()),
-                 phys
-        );
-    }
-
-    let y = Box::new("y");
-    println!("{} => {:p}", &y, y);
-    let z = Box::new("z");
-    println!("{} => {:p}", &z, z);
 
     mongo_os::hlt_loop()
+}
+
+/// 32 bytes
+#[repr(C)]
+struct TestStruct {
+    a: u64,
+    b: u64,
+    c: u64,
+    d: u64,
+}
+
+unsafe fn alloc_test() {
+    let boxed = Box::new(TestStruct { a: 0, b: 0, c: 0, d: 0 });
+    drop(boxed);
 }
 
 fn example_create_page_map_to_0xb8000(mapper: &mut OffsetPageTable, frame_allocator: &mut BootInfoFrameAllocator) {

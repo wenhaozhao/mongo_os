@@ -4,6 +4,7 @@ use core::ptr::null_mut;
 
 use spin::{Mutex, MutexGuard};
 use crate::allocator::{align_up, Locked};
+
 use crate::println;
 
 pub struct BumpAllocator {
@@ -33,7 +34,7 @@ unsafe impl GlobalAlloc for Locked<BumpAllocator> {
             Some(end) => end,
             None => return null_mut()
         };
-        println!("alloc {:x} => {:x}", bump.heap_start, bump.heap_end,alloc_start, alloc_end);
+        println!("alloc {:x} => {:x}", bump.heap_start, bump.heap_end);
         if alloc_end > bump.heap_end {
             println!("OOM!");
             null_mut()

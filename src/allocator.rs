@@ -4,16 +4,19 @@ use x86_64::structures::paging::mapper::MapToError;
 use x86_64::structures::paging::page::PageRange;
 use x86_64::VirtAddr;
 
-use crate::allocator::bump::{BumpAllocator, Locked};
+use crate::allocator::bump::BumpAllocator;
+use crate::allocator::linked_list::LinkedListAllocator;
 use crate::mem::BootInfoFrameAllocator;
 
 pub mod bump;
 pub mod linked_list;
+pub mod fixed_size_block;
 
 
 #[global_allocator]
 //static GLOBAL_ALLOCATOR: LockedHeap = LockedHeap::empty();
-static GLOBAL_ALLOCATOR: Locked<BumpAllocator> = Locked::new(BumpAllocator::new());
+//static GLOBAL_ALLOCATOR: Locked<BumpAllocator> = Locked::new(BumpAllocator::new());
+static GLOBAL_ALLOCATOR: Locked<LinkedListAllocator> = Locked::new(LinkedListAllocator::new());
 
 unsafe fn init_global_allocator(heap_bottom: u64, heap_size: u64) -> Result<(), MapToError<Size4KiB>> {
     GLOBAL_ALLOCATOR.lock().init(heap_bottom as usize, heap_size as usize);
@@ -54,6 +57,6 @@ impl<A> Locked<A> {
     }
 }
 
-fn align_up(addr: usize, align: usize) -> usize {
+pub fn align_up(addr: usize, align: usize) -> usize {
     (addr + align - 1) & !(align - 1)
 }

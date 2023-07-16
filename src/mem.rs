@@ -7,7 +7,7 @@ use x86_64::{PhysAddr, VirtAddr};
 use x86_64::structures::paging::{FrameAllocator, Mapper, OffsetPageTable, Page, PageTableFlags, PhysFrame, Size4KiB};
 use x86_64::structures::paging::mapper::MapToError;
 use x86_64::structures::paging::page::PageRange;
-use crate::bump::{BumpAllocator, Locked};
+use crate::allocator::bump::{BumpAllocator};
 
 use crate::println;
 
