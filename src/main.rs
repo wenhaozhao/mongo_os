@@ -6,6 +6,7 @@ extern crate alloc;
 use alloc::boxed::Box;
 use alloc::vec;
 use alloc::vec::Vec;
+use core::mem::size_of;
 
 use bootloader::{BootInfo, entry_point};
 use x86_64::{PhysAddr, VirtAddr};
@@ -52,7 +53,12 @@ struct TestStruct {
 }
 
 unsafe fn alloc_test() {
-    let boxed = Box::new(TestStruct { a: 0, b: 0, c: 0, d: 0 });
+    let boxed = Box::new(TestStruct { a: 111, b: 222, c: 333, d: 444 });
+    let ptr = (*(&boxed as *const Box<TestStruct> as *const usize)) as *const u64;
+    println!("{:x} => {}", (ptr.offset(0)) as u64, *ptr.offset(0));
+    println!("{:x} => {}", (ptr.offset(1)) as u64, *ptr.offset(1));
+    println!("{:x} => {}", (ptr.offset(2)) as u64, *ptr.offset(2));
+    println!("{:x} => {}", (ptr.offset(3)) as u64, *ptr.offset(3));
     drop(boxed);
 }
 
