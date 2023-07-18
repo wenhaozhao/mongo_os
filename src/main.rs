@@ -30,13 +30,13 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
 
     unsafe {
         alloc_test();
-        alloc_test();
-        alloc_test();
-        alloc_test();
-        alloc_test();
-        alloc_test();
-        alloc_test();
-        alloc_test();
+        // alloc_test();
+        // alloc_test();
+        // alloc_test();
+        // alloc_test();
+        // alloc_test();
+        // alloc_test();
+        // alloc_test();
     }
 
     mongo_os::hlt_loop()
