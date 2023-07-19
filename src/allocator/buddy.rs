@@ -82,11 +82,11 @@ impl BuddyAllocator {
 
     fn alloc(&mut self, layout: Layout) -> Result<NonNull<u8>, ()> {
         let size = max(max(layout.size().next_power_of_two(), size_of::<usize>()), layout.align());
-        let target_bucket = size.trailing_zeros() as usize;
-        'outer: for i in target_bucket..self.free_lists.len() {
+        let bucket = size.trailing_zeros() as usize;
+        'outer: for i in bucket..self.free_lists.len() {
             //println!("bucket {} is empty? {}", target_bucket, self.free_lists[i].is_empty());
             if !self.free_lists[i].is_empty() {
-                for j in (target_bucket + 1..i + 1).rev() {
+                for j in (bucket + 1..i + 1).rev() {
                     if let Some(block) = self.free_lists[j].pop() {
                         // 均分成buddy
                         self.free_lists[j - 1].push(((block as usize) + (1usize << (j - 1))) as *mut usize);
@@ -95,7 +95,7 @@ impl BuddyAllocator {
                         return Err(());
                     }
                 }
-                if let Some(block) = self.free_lists[target_bucket].pop() {
+                if let Some(block) = self.free_lists[bucket].pop() {
                     if let Some(result) = NonNull::new(block as *mut u8) {
                         return Ok(result);
                     }
@@ -103,7 +103,7 @@ impl BuddyAllocator {
                 break 'outer;
             }
         }
-        println!("alloc block in target bucket {} failed!", target_bucket);
+        println!("alloc block in bucket {} failed!", bucket);
         return Err(());
     }
 }
