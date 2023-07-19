@@ -1,14 +1,10 @@
-use alloc::boxed::Box;
 use core::alloc::{GlobalAlloc, Layout};
 use core::cmp::{max, min};
 use core::mem::size_of;
 use core::ptr;
-use core::ptr::{NonNull, null_mut};
+use core::ptr::NonNull;
 
-use x86_64::structures::idt::ExceptionVector::Page;
-use x86_64::structures::paging::mapper::MappedFrame::Size4KiB;
-
-use crate::{panic, print, println};
+use crate::println;
 use crate::allocator::Locked;
 
 #[derive(Debug, Copy, Clone)]
@@ -26,7 +22,6 @@ impl LinkedList {
     fn push(&mut self, node_ptr: *mut usize) {
         unsafe { *node_ptr = self.head as usize; }
         self.head = node_ptr;
-        let mut x = self.head;
     }
 
     /// #### 出队:弹出

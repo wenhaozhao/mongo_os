@@ -3,8 +3,8 @@ use core::ptr;
 use core::ptr::null_mut;
 
 use spin::{Mutex, MutexGuard};
-use crate::allocator::{align_up, Locked};
 
+use crate::allocator::{align_up, Locked};
 use crate::println;
 
 pub struct BumpAllocator {

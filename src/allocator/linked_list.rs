@@ -91,9 +91,7 @@ impl LinkedListAllocator {
         let alloc_start = align_up(region.start_addr(), align);
         let alloc_end = alloc_start.checked_add(size).ok_or(())?;
         let excess_size = alloc_end - alloc_end;
-        if excess_size < 0 {
-            Err(())
-        } else if excess_size > 0 && excess_size < mem::size_of::<ListNode>() {
+        if excess_size > 0 && excess_size < mem::size_of::<ListNode>() {
             Err(())
         } else {
             Ok(alloc_start)

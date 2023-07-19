@@ -5,12 +5,12 @@ use crate::print;
 
 const PS2_IO_PORT_ADDR: u16 = 0x60;
 
-pub extern "x86-interrupt" fn keyboard_interrupt_handler(stack_frame: InterruptStackFrame) {
+pub extern "x86-interrupt" fn keyboard_interrupt_handler(_stack_frame: InterruptStackFrame) {
     //todo
     use lazy_static::lazy_static;
     use spin::Mutex;
     use x86_64::instructions::port::Port;
-    use pc_keyboard::{HandleControl, Keyboard, DecodedKey};
+    use pc_keyboard::{DecodedKey, HandleControl, Keyboard};
 lazy_static! {
     static ref KEYBOARD: Mutex<Keyboard<pc_keyboard::layouts::Us104Key, pc_keyboard::ScancodeSet1>>={
         Mutex::new(Keyboard::new(

@@ -3,7 +3,10 @@ use pic8259::ChainedPics;
 use spin::Mutex;
 use x86_64::structures::idt::{InterruptDescriptorTable, InterruptStackFrame, PageFaultErrorCode};
 
-use crate::{gdt, println, timer, keyboard, hlt_loop};
+use crate::{gdt, hlt_loop, println};
+
+pub mod timer;
+pub mod keyboard;
 
 lazy_static! {
 static ref IDT: InterruptDescriptorTable = {

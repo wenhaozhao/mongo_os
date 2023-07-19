@@ -1,15 +1,6 @@
-use core::alloc::{GlobalAlloc, Layout};
-use core::ptr::null_mut;
-
 use bootloader::BootInfo;
-use linked_list_allocator::LockedHeap;
 use x86_64::{PhysAddr, VirtAddr};
-use x86_64::structures::paging::{FrameAllocator, Mapper, OffsetPageTable, Page, PageTableFlags, PhysFrame, Size4KiB};
-use x86_64::structures::paging::mapper::MapToError;
-use x86_64::structures::paging::page::PageRange;
-use crate::allocator::bump::{BumpAllocator};
-
-use crate::println;
+use x86_64::structures::paging::{FrameAllocator, OffsetPageTable, PhysFrame, Size4KiB};
 
 pub unsafe fn init_offset_page_table(phys_mem_offset: VirtAddr) -> OffsetPageTable<'static> {
     use x86_64::structures::paging::PageTable;

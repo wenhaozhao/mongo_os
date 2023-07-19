@@ -3,13 +3,13 @@
 #![feature(abi_x86_interrupt)]
 #![feature(const_mut_refs)]
 
+extern crate alloc;
+
 use core::panic::PanicInfo;
 
 pub mod vga_buffer;
 pub mod gdt;
 pub mod idt;
-pub mod timer;
-pub mod keyboard;
 pub mod mem;
 pub mod allocator;
 
@@ -31,4 +31,3 @@ pub fn hlt_loop() ->!{
 }
 
 
-extern crate alloc;

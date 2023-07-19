@@ -48,7 +48,7 @@ impl FixedSizeBlock {
     }
 
     unsafe fn fallback_dealloc(&mut self, ptr: *mut u8, layout: Layout) {
-        &self.fallback_allocator.deallocate(NonNull::new(ptr).unwrap(), layout);
+        self.fallback_allocator.deallocate(NonNull::new(ptr).unwrap(), layout);
     }
 }
 

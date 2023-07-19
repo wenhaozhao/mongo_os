@@ -4,15 +4,11 @@
 extern crate alloc;
 
 use alloc::boxed::Box;
-use alloc::vec;
-use alloc::vec::Vec;
-use core::mem::size_of;
 
 use bootloader::{BootInfo, entry_point};
-use x86_64::{PhysAddr, VirtAddr};
-use x86_64::structures::paging::{FrameAllocator, mapper, Mapper, OffsetPageTable, Page, PageTable, PageTableFlags, PhysFrame, Size4KiB, Translate};
+use x86_64::VirtAddr;
 
-use mongo_os::{allocator, mem, println, vga_buffer};
+use mongo_os::{allocator, mem, println};
 use mongo_os::mem::BootInfoFrameAllocator;
 
 entry_point!(kernel_main);
@@ -61,7 +57,7 @@ unsafe fn alloc_test() {
     println!("{:x} => {}", (ptr.offset(3)) as u64, *ptr.offset(3));
     drop(boxed);
 }
-
+/*
 fn example_create_page_map_to_0xb8000(mapper: &mut OffsetPageTable, frame_allocator: &mut BootInfoFrameAllocator) {
     let page: Page<Size4KiB> = Page::containing_address(VirtAddr::new(0xdeadbeaf000));
     let phys = PhysFrame::containing_address(PhysAddr::new(vga_buffer::VGA_PHYS_ADDR));
@@ -71,3 +67,4 @@ fn example_create_page_map_to_0xb8000(mapper: &mut OffsetPageTable, frame_alloca
         ptr.offset(400).write_volatile(0x_f021_f077_f065_f04e);
     }
 }
+ */
