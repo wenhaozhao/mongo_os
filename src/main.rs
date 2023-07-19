@@ -49,7 +49,7 @@ struct TestStruct {
 }
 
 unsafe fn alloc_test() {
-    let boxed = Box::new(TestStruct { a: 111, b: 222, c: 333, d: 444 });
+    let boxed = Box::new(TestStruct { a: 0x000F, b: 0x00FF, c: 0x0FFF, d: 0xFFFF });
     let ptr = (*(&boxed as *const Box<TestStruct> as *const usize)) as *const u64;
     println!("{:x} => {}", (ptr.offset(0)) as u64, *ptr.offset(0));
     println!("{:x} => {}", (ptr.offset(1)) as u64, *ptr.offset(1));
