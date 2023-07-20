@@ -48,7 +48,7 @@ impl LinkedList {
         if node_ptr == self.head {
             self.pop();
         } else {
-            let (next, mut pre) = (*node_ptr, *node_ptr.offset(1) as *mut usize);
+            let (next, pre) = (*node_ptr, *node_ptr.offset(1) as *mut usize);
             pre.write(next);
         }
     }
@@ -60,17 +60,14 @@ impl LinkedList {
 
 unsafe impl Send for LinkedList {}
 
-const FREE_LIST_SIZE: usize = 21usize;
-const MAX_BUCKET: usize = FREE_LIST_SIZE - 1;
-
-pub struct BuddyAllocator {
-    free_lists: [LinkedList; FREE_LIST_SIZE],
+pub struct BuddyAllocator<const ORDER: usize> {
+    free_lists: [LinkedList; ORDER],
 }
 
-impl BuddyAllocator {
+impl<const ORDER: usize> BuddyAllocator<ORDER> {
     pub const fn new() -> Self {
         BuddyAllocator {
-            free_lists: [LinkedList::new(); FREE_LIST_SIZE]
+            free_lists: [LinkedList::new(); ORDER]
         }
     }
 
@@ -84,8 +81,7 @@ impl BuddyAllocator {
         assert!(start <= end);
         let mut current_start = start;
         while current_start + LAYOUT <= end {
-            let low_bit = current_start & !(current_start - 1);
-            let size = Self::prev_power_of_two(end - current_start);// min(low_bit, Self::prev_power_of_two(end - current_start));
+            let size = Self::prev_power_of_two(end - current_start);
             unsafe { self.free_lists[size.trailing_zeros() as usize].push(current_start as *mut usize) };
             current_start += size;
         }
@@ -152,7 +148,7 @@ impl BuddyAllocator {
     }
 }
 
-unsafe impl GlobalAlloc for Locked<BuddyAllocator> {
+unsafe impl<const ORDER: usize> GlobalAlloc for Locked<BuddyAllocator<ORDER>> {
     unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
         match self.lock().alloc(layout) {
             Ok(target) => target.as_ptr(),

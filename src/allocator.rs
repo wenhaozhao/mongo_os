@@ -13,19 +13,17 @@ use crate::allocator::buddy::BuddyAllocator;
 // pub mod fixed_size_block;
 pub mod buddy;
 
+pub const HEAP_BOTTOM: u64 = 0x4444_4444_0000;
+pub const HEAP_SIZE: u64 = 1024 * 1024;//1MiB
+
+pub const BUDDY_ALLOCATOR_ORDER: usize = HEAP_SIZE.trailing_zeros() as usize + 1;
 #[global_allocator]
-//static GLOBAL_ALLOCATOR: LockedHeap = LockedHeap::empty();
-//static GLOBAL_ALLOCATOR: Locked<BumpAllocator> = Locked::new(BumpAllocator::new());
-//static GLOBAL_ALLOCATOR: Locked<LinkedListAllocator> = Locked::new(LinkedListAllocator::new());
-static GLOBAL_ALLOCATOR: Locked<BuddyAllocator> = Locked::new(BuddyAllocator::new());
+static GLOBAL_ALLOCATOR: Locked<BuddyAllocator<BUDDY_ALLOCATOR_ORDER>> = Locked::new(BuddyAllocator::new());
 
 unsafe fn init_global_allocator(heap_bottom: u64, heap_size: u64) -> Result<(), MapToError<Size4KiB>> {
     GLOBAL_ALLOCATOR.lock().init(heap_bottom as usize, heap_size as usize);
     Ok(())
 }
-
-pub const HEAP_BOTTOM: u64 = 0x4444_4444_0000;
-pub const HEAP_SIZE: u64 = 1024 * 1024;//1MiB
 
 pub fn init_heap(mapper: &mut impl Mapper<Size4KiB>, frame_allocator: &mut impl FrameAllocator<Size4KiB>) -> Result<(), MapToError<Size4KiB>> {
     let page_range: PageRange<Size4KiB> = Page::range(
