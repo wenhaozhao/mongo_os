@@ -26,14 +26,14 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
     // example_create_page_map_to_0xb8000(&mut offset_page_table, &mut frame_allocator);
 
     unsafe {
-        alloc_test();
-        // alloc_test();
-        // alloc_test();
-        // alloc_test();
-        // alloc_test();
-        // alloc_test();
-        // alloc_test();
-        // alloc_test();
+        let boxed1 = alloc_test();
+        let boxed2 = alloc_test();
+        let boxed3 = alloc_test();
+        let boxed4 = alloc_test();
+        let boxed5 = alloc_test();
+        let boxed6 = alloc_test();
+        let boxed7 = alloc_test();
+        let boxed8 = alloc_test();
     }
 
     mongo_os::hlt_loop()
@@ -48,14 +48,14 @@ struct TestStruct {
     d: u64,
 }
 
-unsafe fn alloc_test() {
+unsafe fn alloc_test() ->Box<TestStruct> {
     let boxed = Box::new(TestStruct { a: 0x000F, b: 0x00FF, c: 0x0FFF, d: 0xFFFF });
     let ptr = (*(&boxed as *const Box<TestStruct> as *const usize)) as *const u64;
     println!("{:x} => {}", (ptr.offset(0)) as u64, *ptr.offset(0));
     println!("{:x} => {}", (ptr.offset(1)) as u64, *ptr.offset(1));
     println!("{:x} => {}", (ptr.offset(2)) as u64, *ptr.offset(2));
     println!("{:x} => {}", (ptr.offset(3)) as u64, *ptr.offset(3));
-    drop(boxed);
+    boxed
 }
 /*
 fn example_create_page_map_to_0xb8000(mapper: &mut OffsetPageTable, frame_allocator: &mut BootInfoFrameAllocator) {
